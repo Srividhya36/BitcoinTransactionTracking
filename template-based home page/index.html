@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+cntr=0;
+time=0;
+isset=false;
+id=0;
+function func()
+{
+
+	var btcs = new WebSocket('wss://ws.blockchain.info/inv');
+
+	btcs.onopen = function()
+
+	    {
+		    alert("Hello");
+		    btcs.send( JSON.stringify( {"op":"unconfirmed_sub"} ) );
+	    
+	    };
+
+
+	btcs.onmessage = function(onmsg)
+	{
+		var resp = JSON.parse(onmsg.data);
+		var amount = resp.x.out[0].value+resp.x.out[1].value;
+		console.log(amount);
+		var hash = resp.x.hash;
+		var size = resp.x.size;
+	    window.cntr=window.cntr+1;
+	    alert(cntr);
+// 		$.ajax({
+// 	 	    type: "GET",
+// 	 	    url: "KafkaProducerServ",
+// 	 	    data: {amount:amount, hash:hash, size : size},
+// 	 	    success: function(){
+// 	  	        alert("hi");
+// 	 	    },
+// 	 	    error:function(jqxhr,status,exception){
+// 	 	    	alert("error"+exception);
+// 	 	    }
+	 	    
+// 	 	});
+	    if(id==0)
+	    id = setInterval(callserv(),60*1000);
+	    setInterval(timereset(),3600000);
+	 }
+}
+function callserv()
+{
+// 	alert("In scope")
+	var cntr1=cntr;
+	var time1=time+1;
+	time=time1;
+	$.ajax({
+ 	    type: "GET",
+ 	    url: "KafkaProducerServlet",
+ 	    data: {cntr :cntr1, time :time1},
+ 	    success: function(){
+  	        alert("hi");
+ 	      	window.id=0;
+ 	      	window.cntr=0;
+ 	    },
+ 	    error:function(){
+ 	    	alert("error"); 	   	
+ 	    }
+ 	    
+ 	});
+}
+function timereset()
+{
+	time=0;
+}
+</script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+  <!-- Bootstrap -->
+  <link href="assets/css/bootstrap.css" rel="stylesheet">
+  <link href="assets/css/bootstrap-theme.css" rel="stylesheet">
+  <link href="assets/css/font-awesome.css" rel="stylesheet">
+
+  <!-- siimple style -->
+  <link href="assets/css/style.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+  <div id="wrapper">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1>WebSocket API - Bitcoin Transaction Tracking</h1>
+          <h2 class="subtitle">Click this button to start tracking bitcoin transactions in:</h2>
+          <div id="countdown"></div>
+          <form class="form-inline signup" role="form">
+           
+            <button type="submit" class="btn btn-theme" onclick="func()">Get notified!</button>
+          </form>
+
+          
+        </div>
+      </div>
+
+ 
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
+  <script src="assets/js/jquery.countdown.min.js"></script>
+  <script type="text/javascript">
+    $('#countdown').countdown('2019/01/01', function(event) {
+      $(this).html(event.strftime('%w weeks %d days <br /> %H:%M:%S'));
+    });
+  </script>
+
+  <script src="contactform/contactform.js"></script>
+
+</body>
+
+</html>
