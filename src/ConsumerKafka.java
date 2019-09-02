@@ -17,7 +17,7 @@ public class ConsumerKafka {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "test-consumer-group");
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-        consumer.subscribe(Arrays.asList("odd"));
+        consumer.subscribe(Arrays.asList("transaction"));
         ConsumerRecords<String, String> recs = consumer.poll(1);
         String[] params = String.valueOf(recs).split(";");
         try{  
