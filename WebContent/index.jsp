@@ -76,10 +76,10 @@ function timereset()
 	time=0;
 }
 </script>
-<title>Insert title here</title>
+<title>Home Page</title>
 </head>
 <body>
 <input type="button" onclick="func()">
-dhjahkdj
+Click Here
 </body>
 </html>
